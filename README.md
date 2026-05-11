@@ -69,14 +69,14 @@ cv.pdf
 
 ## 📂 Estructura del proyecto
 
-
+```
 /portfolio
 │── index.html
 │── styles.css
 │── script.js
 │── avatar.png
 │── cv.pdf
-
+```
 
 ---
 
