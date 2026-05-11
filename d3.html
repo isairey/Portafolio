@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Portafolio</title>
+
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Scroll reveal -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+
+<body>
+
+<header class="glass">
+  <div class="logo">MiPortafolio<span>.</span></div>
+
+  <nav>
+    <a href="#about">Sobre mí</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Proyectos</a>
+    <a href="#contact">Contacto</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="tag">Ingeniero en Sistemas</span>
+
+    <h1>
+      Construyendo sistemas <span>robustos</span> e <span>escalables</span>
+    </h1>
+
+    <p>
+      Hola 👋 Soy Isai, desarrollador enfocado en backend, APIs, arquitectura limpia y soluciones modernas.
+    </p>
+
+    <div class="buttons">
+      <a href="#projects" class="btn">Ver proyectos</a>
+      <a href="#contact" class="btn-outline">Contactarme</a>
+    </div>
+  </div>
+
+  <div class="hero-img">
+    <img src="https://i.imgur.com/3Gz2G2R.png" alt="avatar"/>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <h2>Sobre mí</h2>
+  <p>Soy desarrollador de software enfocado en sistemas escalables, APIs y arquitectura backend moderna.</p>
+</section>
+
+<section id="skills" class="section dark">
+  <h2>Habilidades</h2>
+
+  <div class="skills-grid">
+    <div class="skill">Java</div>
+    <div class="skill">Spring Boot</div>
+    <div class="skill">PHP</div>
+    <div class="skill">Laravel</div>
+    <div class="skill">JavaScript</div>
+    <div class="skill">Vue.js</div>
+    <div class="skill">MySQL</div>
+    <div class="skill">Docker</div>
+    <div class="skill">API REST</div>
+  </div>
+</section>
+
+<section id="projects" class="section">
+  <h2>Proyectos</h2>
+
+  <div class="projects">
+    <div class="card">TimShop - eCommerce moderno</div>
+    <div class="card">AR Robot - Realidad aumentada</div>
+    <div class="card">ERP Clínico - Gestión médica</div>
+  </div>
+</section>
+
+<section id="contact" class="section dark">
+  <h2>Contacto</h2>
+  <p>¿Trabajamos juntos?</p>
+
+  <a class="btn" href="mailto:correo@ejemplo.com">Enviar correo</a>
+</section>
+
+<footer>
+  © 2026 Mi Portafolio - Hecho con ❤️
+</footer>
+
+<script>
+  ScrollReveal().reveal('.hero-text, .hero-img', { delay: 200, distance: '60px', origin: 'bottom' });
+  ScrollReveal().reveal('.section', { delay: 200, distance: '40px', origin: 'bottom' });
+  ScrollReveal().reveal('.card, .skill', { interval: 100 });
+</script>
+
+</body>
+</html>

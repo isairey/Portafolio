@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Isai Portfolio Pro Ultra</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+html{scroll-behavior:smooth;}
+
+/* ===== LOADER (VIDEO GAME STYLE) ===== */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#050816;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:99999;
+  color:white;
+  transition:.8s;
+}
+
+#loader h1{
+  font-size:20px;
+  letter-spacing:3px;
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.3}
+}
+
+body.loaded #loader{
+  opacity:0;
+  pointer-events:none;
+}
+
+/* ===== BACKGROUND ===== */
+body.dark{
+  background: linear-gradient(-45deg,#050816,#0f172a,#020617,#111827);
+  background-size:400% 400%;
+  animation:grad 12s ease infinite;
+  color:white;
+}
+body.light{
+  background: linear-gradient(-45deg,#f5f7ff,#e0e7ff,#ffffff,#dbeafe);
+  background-size:400% 400%;
+  animation:grad 12s ease infinite;
+  color:#111;
+}
+@keyframes grad{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+body{overflow-x:hidden;cursor:none;transition:.5s;}
+
+/* ===== CURSOR ===== */
+.cursor{
+  position:fixed;width:18px;height:18px;
+  border:2px solid #38bdf8;border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  mix-blend-mode:difference;
+  z-index:9999;
+}
+
+/* ===== NAV (APPLE STYLE ON SCROLL) ===== */
+nav{
+  position:fixed;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:18px 40px;
+  backdrop-filter: blur(12px);
+  background:rgba(0,0,0,0.25);
+  transition:.4s;
+  z-index:1000;
+}
+
+nav.scrolled{
+  background:rgba(10,10,20,0.85);
+  padding:12px 40px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+nav a{
+  color:inherit;
+  margin:0 12px;
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:8px;
+  transition:.3s;
+}
+
+nav a.active{
+  color:#38bdf8;
+  background:rgba(56,189,248,0.15);
+}
+
+nav a:hover{color:#38bdf8;}
+
+/* ===== HERO ===== */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.hero h1{font-size:60px;animation:fadeUp 1s ease;}
+.hero p{opacity:.7;margin-top:10px;animation:fadeUp 1.3s ease;}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ===== SECTIONS (CINEMATIC SCROLL) ===== */
+section{
+  padding:120px 40px;
+  text-align:center;
+  min-height:100vh;
+  opacity:0;
+  transform:translateY(60px);
+  transition:1s;
+}
+
+section.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+  margin-top:30px;
+  perspective:1000px;
+}
+
+/* ===== 3D CARDS ===== */
+.card{
+  padding:18px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(10px);
+  transition:.4s;
+  transform-style:preserve-3d;
+}
+
+.card:hover{
+  transform:rotateY(10deg) rotateX(10deg) scale(1.05);
+}
+
+/* ===== THREE JS ===== */
+#bg{position:fixed;top:0;left:0;z-index:-1;}
+
+/* ===== SWITCH ===== */
+.switch{position:relative;width:64px;height:32px;display:inline-block;}
+.switch input{display:none;}
+.slider{
+  position:absolute;inset:0;
+  background:#111827;
+  border-radius:50px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 8px;
+}
+.slider:before{
+  content:"";
+  position:absolute;
+  height:24px;width:24px;
+  background:white;
+  border-radius:50%;
+  left:4px;
+  transition:.4s;
+}
+input:checked + .slider:before{transform:translateX(32px);}
+input:checked + .slider{background:#38bdf8;}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .hero h1{font-size:36px}
+  nav{padding:12px 20px}
+}
+
+
+
+/* ===== AVATAR FLOATING ===== */
+.avatar{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  border:2px solid rgba(56,189,248,0.6);
+  box-shadow:0 0 20px rgba(56,189,248,0.3);
+  backdrop-filter:blur(10px);
+  z-index:10000;
+  transition:.3s;
+  animation:floatAvatar 3s ease-in-out infinite;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* hover efecto pro */
+.avatar:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 30px rgba(56,189,248,0.6);
+}
+
+/* animación flotante */
+@keyframes floatAvatar{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+
+/* HERO LAYOUT */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 100px;
+  gap:60px;
+  max-width:1200px;
+  margin:auto;
+}
+
+
+
+/* TEXTO */
+.hero-text{
+  flex:1;
+  max-width:600px;
+}
+.hero-text h1{
+  font-size:56px;
+  line-height:1.1;
+  margin-bottom:15px;
+}
+
+/* AVATAR DERECHA */
+.hero-avatar{
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  overflow:hidden;
+  border:2px solid rgba(56,189,248,0.5);
+  box-shadow:0 0 40px rgba(56,189,248,0.3);
+  animation:floatAvatar 4s ease-in-out infinite;
+}
+
+.hero-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* FLOAT ANIMATION */
+@keyframes floatAvatar{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+
+@media(max-width:768px){
+  .hero{
+    flex-direction:column;
+    text-align:center;
+    padding:100px 20px;
+  }
+
+  .hero-avatar{
+    width:200px;
+    height:200px;
+    margin-top:20px;
+  }
+  
+}
+
+.btn{
+  margin-top:25px;
+  padding:14px 28px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:white;
+  font-weight:600;
+  letter-spacing:0.5px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:all .3s ease;
+  box-shadow:0 10px 25px rgba(56,189,248,0.25);
+}
+
+/* hover glow */
+.btn:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 15px 35px rgba(56,189,248,0.4);
+}
+
+/* efecto shine (tipo Apple) */
+.btn::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.3),
+    transparent
+  );
+  transition:0.6s;
+}
+
+.btn:hover::before{
+  left:100%;
+}
+
+.footer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+
+  padding:50px 20px;
+  margin-top:100px;
+
+  border-top:1px solid rgba(255,255,255,0.1);
+  text-align:center;
+}
+
+/* GitHub icon centrado */
+.github-icon{
+  color:inherit;
+  transition:0.3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.github-icon:hover{
+  transform:scale(1.2);
+  color:#38bdf8;
+}
+
+.footer p{
+  opacity:0.7;
+  font-size:14px;
+}
+
+/* HERO GENERAL */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 100px;
+  gap:60px;
+}
+
+/* TEXTO */
+.hero-text{
+  max-width:600px;
+}
+
+/* BOTÓN */
+.hero-buttons{
+  margin-top:25px;
+}
+
+/* CV BUTTON */
+.btn-cv{
+  display:inline-block;
+  padding:14px 22px;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,0.5);
+  color:#38bdf8;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+  background:transparent;
+}
+
+.btn-cv:hover{
+  background:rgba(56,189,248,0.15);
+  transform:translateY(-3px);
+}
+</style>
+</head>
+
+<body class="dark">
+
+<div class="avatar">
+  <img src="avatar.png" alt="avatar">
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <h1>LOADING SYSTEM...</h1>
+</div>
+
+<div class="cursor"></div>
+<canvas id="bg"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div><b>ISAI.DEV</b></div>
+
+  <div>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+  </div>
+
+  <label class="switch">
+    <input type="checkbox" id="themeToggle">
+    <span class="slider"></span>
+  </label>
+</nav>
+
+
+
+
+
+<!-- HERO -->
+<div class="hero">
+
+  <div class="hero-text">
+    <h1>Construyo sistemas modernos</h1>
+    <p>Backend • APIs • Arquitectura escalable</p>
+
+    <div class="hero-buttons">
+      <a class="btn-cv" href="CV.pdf" download>
+        Descargar CV
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-avatar">
+    <img src="avatar.png" alt="avatar">
+  </div>
+
+</div>
+
+
+
+<!-- SECTIONS -->
+<section id="about">
+  <h2>About</h2>
+
+  <p style="max-width:800px;margin:20px auto;opacity:.8;line-height:1.6;">
+    Soy Isai, desarrollador de software enfocado en la creación de sistemas backend escalables, APIs robustas y aplicaciones web modernas.
+    Me interesa la arquitectura de software, el rendimiento y las soluciones limpias que realmente puedan crecer en producción.
+    <br><br>
+    Actualmente trabajo con tecnologías como Java, Spring Boot, Vue y bases de datos relacionales, construyendo proyectos personales y académicos que simulan entornos reales.
+  </p>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+
+  <div class="grid">
+    <div class="card">Java</div>
+    <div class="card">Spring Boot</div>
+    <div class="card">REST APIs</div>
+    <div class="card">MySQL</div>
+    <div class="card">PHP</div>
+    <div class="card">Laravel</div>
+    <div class="card">JavaScript</div>
+    <div class="card">Vue.js</div>
+    <div class="card">Docker</div>
+    <div class="card">Git / GitHub</div>
+  </div>
+</section>
+<section id="projects">
+  <h2>Projects</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>TimShop</h3>
+      <p>Plataforma de e-commerce construida con Vue y Spring Boot, enfocada en arquitectura modular y API REST.</p>
+    </div>
+
+    <div class="card">
+      <h3>AR Robot</h3>
+      <p>Experiencia de realidad aumentada con A-Frame y AR.js, integrando interacción 3D en navegador.</p>
+    </div>
+
+    <div class="card">
+      <h3>ERP Clínico</h3>
+      <p>Sistema de gestión médica con módulos de pacientes, citas y administración de datos clínicos.</p>
+    </div>
+
+  </div>
+
+  <div class="grid">
+    <div class="card">TimShop</div>
+    <div class="card">AR Robot</div>
+    <div class="card">ERP</div>
+  </div>
+</section>
+
+<script>
+
+/* ===== LOADER ===== */
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    document.body.classList.add("loaded");
+  },1200);
+});
+
+/* ===== CURSOR ===== */
+const cursor=document.querySelector(".cursor");
+window.addEventListener("mousemove",e=>{
+  cursor.style.left=e.clientX+"px";
+  cursor.style.top=e.clientY+"px";
+});
+
+/* ===== NAV SCROLL EFFECT ===== */
+const nav=document.getElementById("navbar");
+window.addEventListener("scroll",()=>{
+  nav.classList.toggle("scrolled",window.scrollY>50);
+});
+
+/* ===== ACTIVE SECTION ===== */
+const links=document.querySelectorAll("nav a");
+const sections=document.querySelectorAll("section");
+
+window.addEventListener("scroll",()=>{
+  let current="";
+  sections.forEach(sec=>{
+    const top=sec.offsetTop;
+    if(scrollY>=top-200) current=sec.id;
+  });
+
+  links.forEach(a=>{
+    a.classList.remove("active");
+    if(a.getAttribute("href").includes(current)){
+      a.classList.add("active");
+    }
+  });
+
+  sections.forEach(sec=>{
+    const rect=sec.getBoundingClientRect();
+    if(rect.top<window.innerHeight-100){
+      sec.classList.add("show");
+    }
+  });
+});
+
+/* ===== THEME ===== */
+const toggle=document.getElementById("themeToggle");
+toggle.addEventListener("change",()=>{
+  document.body.classList.toggle("light");
+  document.body.classList.toggle("dark");
+});
+
+/* ===== THREE JS ===== */
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({canvas:document.querySelector("#bg"),alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+camera.position.z=5;
+
+const geo=new THREE.TorusGeometry(1,0.4,16,100);
+const mat=new THREE.MeshStandardMaterial({color:0x38bdf8,wireframe:true});
+const mesh=new THREE.Mesh(geo,mat);
+scene.add(mesh);
+
+const light=new THREE.PointLight(0xffffff,1);
+light.position.set(5,5,5);
+scene.add(light);
+
+function animate(){
+  requestAnimationFrame(animate);
+  mesh.rotation.x+=0.01;
+  mesh.rotation.y+=0.005;
+  renderer.render(scene,camera);
+}
+animate();
+
+</script>
+
+
+<footer class="footer">
+  <p>© 2026 Isai Dev Portfolio</p>
+
+  <a class="github-icon" href="https://github.com/isairey" target="_blank">
+    <!-- SVG GitHub -->
+    <svg height="28" width="28" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 
+      7.59.4.07.55-.17.55-.38 
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94
+      -.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53
+      .63-.01 1.08.58 1.23.82
+      .72 1.21 1.87.87 2.33.66
+      .07-.52.28-.87.51-1.07
+      -1.78-.2-3.64-.89-3.64-3.95
+      0-.87.31-1.59.82-2.15
+      -.08-.2-.36-1.02.08-2.12
+      0 0 .67-.21 2.2.82
+      .64-.18 1.32-.27 2-.27
+      .68 0 1.36.09 2 .27
+      1.53-1.04 2.2-.82 2.2-.82
+      .44 1.1.16 1.92.08 2.12
+      .51.56.82 1.27.82 2.15
+      0 3.07-1.87 3.75-3.65 3.95
+      .29.25.54.73.54 1.48
+      0 1.07-.01 1.93-.01 2.2
+      0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8
+      c0-4.42-3.58-8-8-8z"/>
+    </svg>
+  </a>
+</footer>
+</body>
+</html>
